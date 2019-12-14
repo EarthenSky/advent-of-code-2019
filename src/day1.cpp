@@ -6,7 +6,6 @@
 #include "day1.h"
 
 namespace day1 {
-
     void part1();
     void part2();
 

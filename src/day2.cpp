@@ -8,7 +8,6 @@
 #include "day2.h"
 
 namespace day2 {
-
     int runOpCode(int opcode, std::vector<int>& program) {
         if (program[opcode] == 1) {
             program[program[opcode + 3]] = program[program[opcode + 1]] + program[program[opcode + 2]];
