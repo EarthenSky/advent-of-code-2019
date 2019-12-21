@@ -17,8 +17,8 @@ namespace day7 {
     void part2();
 
     void day7() {
-        part1();
-        //part2();
+        //part1();
+        part2();
         std::cout << "/* ending day7 */\n";
     }
 
@@ -165,39 +165,45 @@ namespace day7 {
 
     // -------------------------------------------------------------------------------------------------------------- //
 
-    //TODO: fix this to support fake concurrency.
-    // run program on each amp (5x) and generate an output signal.
-    int getOutputSignal(int phaseSetting[], std::vector<int>& prog, std::vector<int>& backup) {
+    // this function supports fake concurency (feedback)
+    int getOutputSignal_feedback(int phaseSetting[], std::vector<int>& backup) {
         int instructions[5] = {0, 0, 0, 0, 0};
+        std::vector<int> programs[5];
+        
+        int cp;  // current program
+        int input = 0;  // initial input is preset to 0
+        int output = 0;
 
-        int input = 0, output;  // initial input is preset to 0
-        for (int i = 0; i < AMP_COUNT; i++) {
-            prog = backup;  // reset program before using
+        // Send the initial phase settings to each program & init.
+        for(cp = 0; cp < AMP_COUNT; cp++) { 
+            programs[cp] = backup;  // init each program.
+            instructions[cp] = runOpCode(instructions[cp], programs[cp], phaseSetting[cp], output);
+        }
 
-            // send first kind of input.
-            instructions[i] = runOpCode(instructions[i], prog, phaseSetting[i], output);
+        // Loops until last amplifier halts. (?)
+        cp = 0;
+        while(instructions[cp] != -1) {
+            instructions[cp] = runOpCode(instructions[cp], programs[cp], input, output);
             
-            // loop for second kind of input and for output.
-            while(instructions[i] != -1) {
-                instructions[i] = runOpCode(instructions[i], prog, input, output);
+            // case: program has given an output, switch programs.
+            if(output != input) {
+                if (++cp >= AMP_COUNT) cp = 0;
+                input = output;
             }
-
-            input = output;
         }
 
         return input;
     }
 
     // runs the program on all permutations of an array. (recursive)
-    void runOnPermutations_v2(int array[], int arrayTail[], int n, std::vector<int>& prog, 
-                           std::vector<int>& backup, int& maxOutput) {
+    void runOnPermutations_feedback(int array[], int arrayTail[], int n, std::vector<int>& backup, int& maxOutput) {
         for(int i = 0; i < n; i++) { 
             if (n == 1) {  // run program on this permutation
-                int output = getOutputSignal(array, prog, backup);
+                int output = getOutputSignal_feedback(array, backup);
                 maxOutput = iMax(maxOutput, output);  // update max value.
             } else { // generate two more permutations
                 iSwap(arrayTail[0], arrayTail[i]);
-                runOnPermutations(array, arrayTail + 1, n - 1, prog, backup, maxOutput);
+                runOnPermutations_feedback(array, arrayTail + 1, n - 1, backup, maxOutput);
                 iSwap(arrayTail[0], arrayTail[i]);
             }
         }
@@ -207,7 +213,6 @@ namespace day7 {
         std::cout << "/* starting day7 part2 */\n";
 
         std::vector<int> program_backup;
-        std::vector<int> program;
         std::ifstream file ("resc/day7a.txt");
     
         // fill vector
@@ -220,7 +225,7 @@ namespace day7 {
 
         int array[AMP_COUNT] = {5, 6, 7, 8, 9};  // possible amp values
         int maxOutputSignal = -1;
-        runOnPermutations(array, array, AMP_COUNT, program, program_backup, maxOutputSignal);
+        runOnPermutations_feedback(array, array, AMP_COUNT, program_backup, maxOutputSignal);
         
         std::cout << "maxOutputSignal = " << maxOutputSignal << "\n";
     }
