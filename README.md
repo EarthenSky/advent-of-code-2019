@@ -1,10 +1,11 @@
-## This are my advent of code 2019 solutions
+## These are my advent of code 2019 solutions
 
 I wrote it in C++ and tried to structure it nicely and stuff.
 
 Okay I don't know how to write c++ properly. it's ... a little challenging. 
 Time to try using C# instead.
 
+<br><br>
 
 ## Separations:
 
