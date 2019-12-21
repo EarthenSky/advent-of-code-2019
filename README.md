@@ -2,8 +2,8 @@
 
 I wrote it in C++ and tried to structure it nicely and stuff.
 
-Okay I don't know how to write c++ properly. it's ... a little challenging. 
-Time to try using C# instead.
+Okay I don't know how to write c++ properly; i'm pretty much just writing broken c. 
+Gonna use C# instead.
 
 <br><br>
 
@@ -12,4 +12,10 @@ Time to try using C# instead.
 /src_cpp/ -> c++ with gcc (using wsl debian) <br>
 /src_cs/ -> csharp with mono <br>
 
-^w^
+<br><br>
+
+## Notes:
+
+- They keep having use use the incode computers we made which I made initially in c++ and don't want to remake in c#. 
+
+-_-
