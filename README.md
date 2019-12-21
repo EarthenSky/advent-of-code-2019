@@ -8,7 +8,7 @@ Time to try using C# instead.
 
 ## Separations:
 
-/src_cpp/ -> c++ with gcc (using wsl debian)
-/src_cs/ -> csharp with mono
+/src_cpp/ -> c++ with gcc (using wsl debian) <br>
+/src_cs/ -> csharp with mono <br>
 
 ^w^
