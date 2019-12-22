@@ -1,10 +1,21 @@
-## This are my advent of code 2019 solutions
+## These are my advent of code 2019 solutions
 
 I wrote it in C++ and tried to structure it nicely and stuff.
 
-Okay c++ is ... a little challenging. Time to try using C# instead.
+Okay I don't know how to write c++ properly; i'm pretty much just writing broken c. 
+Gonna use C# instead.
 
-/src_cpp/ -> c++ with gcc (using wsl debian)
-/src_cs/ -> csharp with mono
+<br><br>
 
-^w^
+## Separations:
+
+/src_cpp/ -> c++ with gcc (using wsl debian) <br>
+/src_cs/ -> csharp with mono <br>
+
+<br><br>
+
+## Notes:
+
+- They keep having use use the incode computers we made which I made initially in c++ and don't want to remake in c#. 
+
+-_-
