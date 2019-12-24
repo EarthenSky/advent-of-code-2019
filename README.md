@@ -18,5 +18,6 @@ Gonna use C# instead.
 
 - They keep having use use the incode computers we made which I made initially in c++ and don't want to remake in c#. \
 - Okay, for day 9 I gave in and made my intcode computer nicely in c++.
+- To run the nice intcode computer you need the boost library for c++.
 
 -_-
