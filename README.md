@@ -16,6 +16,7 @@ Gonna use C# instead.
 
 ## Notes:
 
-- They keep having use use the incode computers we made which I made initially in c++ and don't want to remake in c#. 
+- They keep having use use the incode computers we made which I made initially in c++ and don't want to remake in c#. \
+- Okay, for day 9 I gave in and made my intcode computer nicely in c++.
 
 -_-
