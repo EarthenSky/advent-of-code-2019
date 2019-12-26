@@ -4,6 +4,7 @@ using System.IO;  // for files
 using System.Drawing;  // for bitmap
 using System.Drawing.Imaging;  // for image format
 
+
 public class Program 
 {
     public static void Main(string[] args) {
