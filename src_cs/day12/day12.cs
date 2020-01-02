@@ -49,7 +49,6 @@ public class Program
 
         Console.WriteLine( "matchSteps = {0}", Alg.Lcm(lcmXY, zSteps) );
 
-
     } 
 }
 
