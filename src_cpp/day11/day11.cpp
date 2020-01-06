@@ -129,8 +129,6 @@ void Robot::RunRobot(string programLocation) {
 
     int steps = 0;
 
-    cout << "s\n";
-
     // loop on
     int exitCode = C_CONTINUE;
     while(exitCode != C_END) {
@@ -147,7 +145,7 @@ void Robot::RunRobot(string programLocation) {
         steps++;
     }
 
-    cout << "steps: " << steps << "\n";
+    //cout << "steps: " << steps << "\n";
 
     // amount of tiles that have been affected.
     _uniquePanels = _steppedPanels.size();

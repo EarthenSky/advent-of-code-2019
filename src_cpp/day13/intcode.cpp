@@ -45,8 +45,11 @@ mp::int128_t IntcodeComputer::GetValueAt(int pos) {
     // Check address value.
     if( address < (int) _program.size() && address >= 0 ) {
         return _program[ address ];
-    } else if (address >= 0 && _extraMemory.find( address ) != _extraMemory.end()) {  // outside of program bounds.
-        return _extraMemory[ address ];
+    } else if (address >= 0/* && _extraMemory.find( address ) != _extraMemory.end()*/) {  // outside of program bounds.
+        if(_extraMemory.find( address ) == _extraMemory.end())  // case: cannot find.
+            return 0;  // this is right?  // see: https://adventofcode.com/2019/day/9
+        else
+            return _extraMemory[ address ];
     } else {
         cout << "invalid addr: " << address << "\n";
         return -1;  // returns garbage
@@ -245,10 +248,31 @@ void IntcodeComputer::EnqueInput(mp::int128_t val) {
     _inputQueue.push_back(val); 
 } 
 
+int IntcodeComputer::GetOutputSize() {
+    return _outputQueue.size();
+} 
+
 mp::int128_t IntcodeComputer::DequeueOutput() { 
-    mp::int128_t val = _outputQueue.front();
-    _outputQueue.pop_front();  // remove from front
-    return val; 
+    if(_outputQueue.size() != 0) {
+        mp::int128_t val = _outputQueue.front();
+        _outputQueue.pop_front();  // remove from front
+        return val; 
+    } else {
+        cout << "DEQUEUE ERROR\n";
+        return (mp::int128_t) -1;
+    }
+}
+
+void IntcodeComputer::SetMemory(int address, mp::int128_t val, bool startFromProgramSize) {
+    if(startFromProgramSize && address >= 0) {
+        _extraMemory[(int)_program.size() + address] = val;
+    } else if (!startFromProgramSize && address >= (int) _program.size()) {
+        _extraMemory[(int) _program.size() + address] = val;
+    } else if (!startFromProgramSize && address >= 0){
+        _program[address] = val;
+    } else {
+        cout << "Error: Invalid SetExtraMemory() address\n";
+    }
 }
 
 

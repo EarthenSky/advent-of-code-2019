@@ -54,7 +54,10 @@ public:
     void ResetProgram();
 
     void EnqueInput(mp::int128_t val);
+    int GetOutputSize();
     mp::int128_t DequeueOutput();
+
+    void SetMemory(int position, mp::int128_t val, bool startFromProgramSize);
 
     // Printing methods
     void PrintInput();
