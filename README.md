@@ -11,6 +11,7 @@ Gonna use C# instead.
 
 /src_cpp/ -> c++ with gcc (using wsl debian) <br>
 /src_cs/ -> csharp with mono <br>
+/src_c/ -> deprecated because c is unwieldy <br>
 
 <br><br>
 
