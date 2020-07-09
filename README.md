@@ -5,6 +5,8 @@ I wrote it in C++ and tried to structure it nicely and stuff.
 Okay I don't know how to write c++ properly; i'm pretty much just writing broken c. 
 Gonna use C# instead.
 
+Now I'm just using this to learn new languages, but at least it's still fun.
+
 <br><br>
 
 ## Separations:
@@ -12,6 +14,7 @@ Gonna use C# instead.
 /src_cpp/ -> c++ with gcc (using wsl debian) <br>
 /src_cs/ -> csharp with mono <br>
 /src_c/ -> deprecated because c is unwieldy <br>
+/src_rust/ -> builds are run with cargo on wsl debian <br>
 
 <br><br>
 
