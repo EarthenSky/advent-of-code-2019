@@ -2,6 +2,10 @@ use std::fs;
 use std::env;
 use std::path::Path;
 
+
+// ************************************************************************* //
+
+
 fn read_signal(filename: &str) -> Vec<u32> {
     // construct proper path to file.
     let current_directory = env::current_dir().unwrap();
@@ -20,6 +24,33 @@ fn read_signal(filename: &str) -> Vec<u32> {
 
     signal_list
 }
+
+// process the signal according to the message offset
+fn process_signal(filename: &str) -> Vec<u32> {
+    let REP_COUNT: u32 = 10_000;
+    
+    let signal_base = read_signal(filename);
+    let mut message_offset: usize = 0;
+    for (i, num) in signal_base[0..7].iter().enumerate() {
+        message_offset += (*num as usize) * 10_usize.pow(6 - (i as u32));
+    }
+
+    // double check that the method will work
+    assert!(message_offset > (signal_base.len() * REP_COUNT as usize / 2));
+
+    // create signal
+    let mut signal = Vec::new();
+    for _ in 0..REP_COUNT {
+        signal.extend(signal_base.clone());
+    }
+
+    signal.drain(0..message_offset);
+    
+    signal
+}
+
+
+// ************************************************************************* //
 
 
 // returns a wave pattern as a vector of size length
@@ -97,9 +128,6 @@ fn apply_fft_improved(phases: u32, list: &Vec<u32>) -> Vec<u32> {
             for j in i..list.len() {
                 cur_out_val += (input[j] as i32) * pattern_map[i][j];
             }
-            //for (j, val) in input.iter().enumerate() {
-            //    cur_out_val += (*val as i32) * pattern_map[i][j];
-            //}
             
             output.push((cur_out_val.abs() % 10) as u32); 
         }
@@ -110,17 +138,14 @@ fn apply_fft_improved(phases: u32, list: &Vec<u32>) -> Vec<u32> {
     input
 }
 
-fn apply_fft_v3(phases: u32, list: &Vec<u32>) -> Vec<u32> {
+// $list must be the end half of a signal
+fn apply_fft_pruned(phases: u32, list: &Vec<u32>) -> Vec<u32> {
     let mut input = list.clone();
-   
-    // generate pattern map beforehand & leave in memory
-    let mut pattern_map: Vec<Vec<i32>> = Vec::new();
-    for i in 0..list.len() {
-        pattern_map.push( get_pattern((i + 1) as u32, list.len()) );
-    }
+
+    println!("len -> {}", list.len());
 
     // do n phases
-    for _ in 0..phases {
+    for p in 0..phases {
         let mut output = Vec::new();
 
         // do one phase & fill output.
@@ -129,20 +154,48 @@ fn apply_fft_v3(phases: u32, list: &Vec<u32>) -> Vec<u32> {
             
             // sum patterm combined values.
             for j in i..list.len() {
-                cur_out_val += (input[j] as i32) * pattern_map[i][j];
+                cur_out_val += input[j] as i32;
             }
-            //for (j, val) in input.iter().enumerate() {
-            //    cur_out_val += (*val as i32) * pattern_map[i][j];
-            //}
             
             output.push((cur_out_val.abs() % 10) as u32); 
         }
+
+        println!("phase {} done", p);
 
         input = output;  // update the input
     }
 
     input
 }
+
+// optimized to run in time O(n), rather than O(n^2)
+fn apply_fft_pruned_improved(phases: u32, list: &Vec<u32>) -> Vec<u32> {
+    let mut input = list.clone();
+
+    println!("len -> {}", list.len());
+
+    // do n phases
+    for p in 0..phases {
+        let mut output = Vec::new();
+        let mut cur_out_val: u32 = input.iter().sum();
+
+        // remove leftmost value (b/c turned to zero) each reptition
+        for i in 0..input.len() {
+            output.push(cur_out_val % 10); 
+            cur_out_val -= input[i];
+        }
+
+        println!("phase {} done", p);
+
+        input = output;  // update the input
+    }
+
+    input
+}
+
+
+// ************************************************************************* //
+
 
 pub fn part1() {
     println!("//** Part 1 **//");
@@ -157,25 +210,16 @@ pub fn part1() {
     // puzzle solution -> 63483758
 }
 
-pub fn part1_silent() {
+pub fn part1_quiet() {
     let signal_list = read_signal("input.txt");
     let signal_list_output = apply_fft_improved(100, &signal_list);
     println!("{:?}", signal_list_output.len());
 }
 
-/*
-fn process_signal(filename: &str) -> (Vec<u32>, u32) {
-
-}
-*/
-
-/*
-fn part2() {
+pub fn part2() {
     println!("//** Part 2 **//");
 
-    let (real_signal, message_offset) = process_signal("input.txt");
-
+    let pruned_signal = process_signal("input.txt");
+    let output_signal = apply_fft_pruned_improved(100, &pruned_signal);
+    println!("final output list after 100 phases -> {:?}", &output_signal[..8]);
 }
-*/
-
-
