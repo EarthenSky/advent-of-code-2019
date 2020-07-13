@@ -14,12 +14,12 @@ EDIT 2: Now I'm just using this to learn new languages, but at least it's still 
 /src_cpp/ -> c++ with gcc (using wsl debian) <br>
 /src_cs/ -> csharp with mono <br>
 /src_c/ -> deprecated because c is unwieldy <br>
-/src_rust/ -> builds are run with cargo on wsl debian <br>
+/src_rust/ -> builds are run with cargo on wsl debian (cries in profiler)<br>
 
 <br><br>
 
 ## Notes:
 
-- They keep having use use the incode computers we made which I made initially in c++ and don't want to remake in c#. \
+- They keep having use use the incode computers we made which I made initially in c++ and don't want to remake in c#. :\
 - Okay, for day 9 I gave in and made my intcode computer nicely in c++.
 - To run the nice intcode computer you need the boost library for c++.
