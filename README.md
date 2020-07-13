@@ -2,10 +2,10 @@
 
 I wrote it in C++ and tried to structure it nicely and stuff.
 
-Okay I don't know how to write c++ properly; i'm pretty much just writing broken c. 
+EDIT: Okay I don't know how to write c++ properly; i'm pretty much just writing broken c. 
 Gonna use C# instead.
 
-Now I'm just using this to learn new languages, but at least it's still fun.
+EDIT 2: Now I'm just using this to learn new languages, but at least it's still fun.
 
 <br><br>
 
