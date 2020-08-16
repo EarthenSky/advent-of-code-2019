@@ -82,7 +82,7 @@ public class Analysis
             tmp = tmp.GetParent();
         
         treeRoot = tmp;
-        treeRoot.Depth = 0;  //TODO: this might actually be 0.
+        treeRoot.Depth = 0;
     }
 
     private ObjectNode GetObject(string name, bool createIfNotFound) {

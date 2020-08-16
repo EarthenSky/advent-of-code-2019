@@ -78,8 +78,8 @@ void RepairDroid::Activate() {
                     delete target;
                 target = _frontier.front();
                 _frontier.pop_front();
+
                 currentPath.assign(target->path.begin(), target->path.end());
-                //cout << "length : " << currentPath.size() << "\n";
                 cur = currentPath.front();
                 currentPath.pop_front();
                 isReturning = false; 
@@ -102,7 +102,6 @@ void RepairDroid::Activate() {
                 case TILE_WALL: { // case: failed to move last tile in map.
                     Point2D moved = directionToMove(cur);  // player moves
                     _values[Point2D(x + moved.x, y + moved.y)] = '#';
-                    //cout << "wall! -- " << x + moved.x << "," << y + moved.y << " ----------\n";
                     break; // player didn't move
                 }
                 case TILE_EMPTY: {
@@ -110,7 +109,6 @@ void RepairDroid::Activate() {
                     x += moved.x;
                     y += moved.y;
                     _values[Point2D(x, y)] = ' ';
-                    //cout << "empty tile -- " << x << "," << y << " ----------\n";
                     break;
                 }
                 case TILE_GOAL: {
@@ -174,4 +172,45 @@ int RepairDroid::GetMinPathLen() {
 
         pathSize += 1;
     }
+}
+
+void RepairDroid::OxygenPush(list<Point2D> &front, Point2D pos, char value) {
+    if ( _marked.find(pos) == _marked.end() && _values.find(pos) != _values.end() && 
+         (_values.find(pos)->second == ' ' || _values.find(pos)->second == 'G') ) {
+        _marked[pos] = value;
+        front.push_back(pos);
+    }
+}
+
+// Must activate droid before simulating oxygen
+void RepairDroid::SimulateOxygen() {
+
+    list<Point2D> oxygenFrontier;
+
+    _marked.clear();
+    OxygenPush(oxygenFrontier, _goal, 'O');
+
+    _oxygenFillTime = 0;
+
+    while (oxygenFrontier.size() != 0) {
+        list<Point2D> newFrontier;
+        for (Point2D pos : oxygenFrontier) {
+            OxygenPush(newFrontier, Point2D(pos.x + 1, pos.y), 'O');
+            OxygenPush(newFrontier, Point2D(pos.x, pos.y + 1), 'O');
+            OxygenPush(newFrontier, Point2D(pos.x - 1, pos.y), 'O');
+            OxygenPush(newFrontier, Point2D(pos.x, pos.y - 1), 'O');
+        }
+
+        // update true frontier with new frontier and forget all past nodes.
+        oxygenFrontier.clear();
+        oxygenFrontier = newFrontier;
+
+        _oxygenFillTime += 1;
+    }
+
+    _oxygenFillTime -= 1;
+}
+
+int RepairDroid::GetFillTime() {
+    return _oxygenFillTime;
 }

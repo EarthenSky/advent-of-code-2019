@@ -26,19 +26,23 @@ private:
 
     bool _programLoaded;
     Point2D _goal;
+    int _oxygenFillTime;
 
     void Reset();
 
     void AddNode(int x, int y, char action);
     void AddNode(int x, int y, const vector<char> &path, char action);
+    void OxygenPush(list<Point2D> &front, Point2D pos, char value);
 
 public:
     RepairDroid();
-
     void LoadProgram(string filename);
-    void Activate();
 
+    void Activate();
     int GetMinPathLen();
+
+    void SimulateOxygen();
+    int GetFillTime();
 };
 
 #endif //!REPAIR_DROID

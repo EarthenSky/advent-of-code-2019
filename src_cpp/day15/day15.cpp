@@ -11,8 +11,8 @@ void part2();
 int main() {
     cout << "## Running program ##\n";
 
-    part1();
-    //part2();
+    //part1();
+    part2();
 
     cout << "## Ending program ##\n";
     return 0;
@@ -29,6 +29,16 @@ void part1() {
 }
 
 void part2() {
-    
+    // create repairDroid object.
+    RepairDroid droid; 
+    droid.LoadProgram("resc/input.txt");
+
+    // turn on repairDroid to scout the environment. Given that I rendered the maze,
+    // I can personally assert that every space in the board, except for one has been
+    // traversed, and that one space will not affect the validity of the calculation.
+    droid.Activate(); 
+
+    droid.SimulateOxygen();
+    cout << "Time for oxygen to fill maze = " << droid.GetFillTime() << " mins \n";
 }
 
