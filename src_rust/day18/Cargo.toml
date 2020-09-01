@@ -1,0 +1,12 @@
+[package]
+name = "day18"
+version = "0.1.0"
+authors = ["geb"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+priority-queue = "1.0.0"
+bit-vec = "0.6.2"
+pprof = { version = "0.3.18", features = ["flamegraph"] } # for profiling
