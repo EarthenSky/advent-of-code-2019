@@ -13,11 +13,11 @@ use types::{CharMatrix, Node, Point2D};
 // Input is assumed to be well formed.
 
 fn main() {
-    part1_flamegraph();
+    part1();
 }
 
 fn part1_flamegraph() {
-    let guard = pprof::ProfilerGuard::new(100).unwrap();
+    let guard = pprof::ProfilerGuard::new(1000).unwrap();
     part1();
     if let Ok(report) = guard.report().build() {
         let file = File::create("flamegraph.svg").unwrap();
@@ -26,6 +26,7 @@ fn part1_flamegraph() {
     };
 }
 
+// I had to run this analysis for 4 mins on my computer unfortunately...
 fn part1() {
     println!("Day 18 pt1 start");
 
@@ -33,6 +34,7 @@ fn part1() {
     let mut map = CharMatrix::from_file("input");
     map.print();
     map.propagate_walls(true);
+    map.propagate_keys();
     map.print();
 
     // stores all key & door positions & cleans out the map. Extracts player 
@@ -56,20 +58,22 @@ fn part1() {
     }
 
     // to avoid duplicate checking. This works because nodes are accessed in order.
-    //let mut checked: HashSet<Node> = HashSet::new();
+    // TODO: if checked is invalid, store fcost as well and only prune nodes if they're the same & have a 
+    // worse or equal f cost. (or maybe just g-cost)
+    let mut checked: HashSet<u64> = HashSet::new();
     let mut astar_calls: AstarCache = HashMap::new();
-    //let mut pruned = 0;
+    let mut pruned = 0;
 
     // store all possible nodes
     let mut frontier = PriorityQueue::new();
     frontier.push( Node::make_root(key_positions, door_positions, player_pos), 0_isize );
 
     let mut i = 0;
-    while !frontier.is_empty() && i < 50000 {
+    while !frontier.is_empty() {
         let (current, path_len) = frontier.pop().unwrap();
-        //checked.insert(current.clone());  // is this copy bad?
+        checked.insert(current.state_hash());
 
-        if i % 10000 == 0 {
+        if i % 20000 == 0 {
             println!("------------------------- {}", i);
             let g_cost: usize = current.path_len;
             let mut points: Vec<Point2D> = current.keys.iter().map(|(_ch, p)| *p).collect();
@@ -84,7 +88,7 @@ fn part1() {
             println!("frontier_len = {}", frontier.len());
             //println!("checked = {}", checked.len());
             println!("astar_calls = {}", astar_calls.len());
-            //println!("pruned = {}", pruned);
+            println!("pruned = {}", pruned);
             //current.print();
         }
 
@@ -111,7 +115,11 @@ fn part1() {
             // Add total g-cost of key_getting_action to frontier, do the lowest 
             // g-cost action each iteration and then generate new subsequent 
             //actions with higher g-costs from that action.
-            frontier.push( new_node, -((g_cost + f_cost) as isize) );
+            if !checked.contains(&new_node.state_hash()) {
+                frontier.push( new_node, -((g_cost + f_cost) as isize) );
+            } else {
+                pruned += 1;
+            }
         }
         
         i += 1;

@@ -1,15 +1,16 @@
+use std::collections::hash_map::DefaultHasher;
 use std::collections::HashMap;
 type AstarCache = HashMap<(Vec<(char, Point2D)>, Point2D, Point2D), usize>;
 
 use std::fs;
 use std::process;
-use std::hash::Hash;
+use std::hash::{Hash, Hasher};
 
 use bit_vec::BitVec;
 
 use crate::util;
 
-#[derive(Clone, Eq, PartialEq, Hash)]
+#[derive(Clone)]  
 pub struct Node {
     pub keys: Vec<(char, Point2D)>,
     pub doors: Vec<(char, Point2D)>,
@@ -90,26 +91,31 @@ impl Node {
             path_len: self.path_len + move_len,
         }
     }
+
+    // This function computes a hash which disregards the length of the path to the node.
+    // Now, nodes which are hash identical, but have a longer or equal path length can safely be pruned because
+    // the shorter nodes are ultimately better. (or exactly the same if equal)
+    pub fn state_hash(&self) -> u64 {
+        let mut s = DefaultHasher::new();
+        self.keys.hash(&mut s);
+        self.player_pos.hash(&mut s);
+        s.finish()
+    }
 }
-/*
 impl Hash for Node {
-    // keys & doors are interconnected & path_len is unique for each node, so it  
-    // should not be considered. Player position should also not be considered, 
-    // because it is a unique factor for each node.
     fn hash<H: Hasher>(&self, state: &mut H) {
         self.keys.hash(state);
-        //self.player_pos.hash(state);
+        self.player_pos.hash(state);
+        self.path_len.hash(state);
     }
 }
 impl PartialEq for Node {
-    // Same reasoning as with hash. -> only keys are important for uniqueness
-    // due to the order we are traversing the collection.
     fn eq(&self, other: &Self) -> bool {
-        self.keys == other.keys
+        self.keys == other.keys && self.player_pos == other.player_pos && self.path_len == other.path_len
     }
 }
 impl Eq for Node {}
-*/
+
 #[derive(Clone, Eq, PartialEq, Hash)]
 pub struct CharMatrix {
     pub width: usize,
@@ -177,6 +183,11 @@ impl CharMatrix {
                 }
             }
         }
+    }
+    // This function takes multiple keys in the same corridor (no junctions between them) and turns them into
+    // the same key. Assumes that the structure of the maze is that of a tree (only one way in & out).
+    pub fn propagate_keys(&mut self) {
+        // TODO: this
     }
     pub fn get(&self, p: Point2D) -> char {
         self.data[p.y * self.width + p.x]

@@ -85,7 +85,6 @@ pub fn closest_astar(astar_calls: &mut AstarCache, map: &CharMatrix,
                     None => {
                         let val = astar_pathfind(&map, &Vec::new(), *p1, *p2).len();
                         astar_calls.insert((Vec::new(), *p1, *p2), val);
-                        //println!("v -> {}", val);
                         val
                     },
                 };
