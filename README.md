@@ -23,3 +23,4 @@ EDIT 2: Now I'm just using this to learn new languages, but it's still real fun.
 
 - They keep having us use the incode computers we made which I made initially in c++ and don't want to remake in c#. :\
 - Okay, for day 9 I gave in and made my intcode computer nicely in c++. (To run the nice intcode computer you need the boost library for c++.)
+- I figured out how to profile with rust, but I have to do it on an actual linux machine (not wsl D;) which makes it really difficult.
