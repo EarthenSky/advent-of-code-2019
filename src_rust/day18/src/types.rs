@@ -116,6 +116,121 @@ impl PartialEq for Node {
 }
 impl Eq for Node {}
 
+#[derive(Clone)]  
+pub struct QuadNode {
+    pub key_quads: [Vec<(char, Point2D)>; 4],
+    pub door_quads: [Vec<(char, Point2D)>; 4],
+    pub player_positions: [Point2D; 4],
+    pub path_len: usize,
+}
+impl QuadNode {
+    pub fn make_root(key_quads: [Vec<(char, Point2D)>; 4], 
+                     door_quads: [Vec<(char, Point2D)>; 4], 
+                     player_positions: [Point2D; 4]) -> QuadNode {
+        QuadNode {
+            key_quads, 
+            door_quads,
+            player_positions,
+            path_len: 0,
+        }
+    }
+
+    // is goal if there are no more keys.
+    pub fn is_goal(&self) -> bool {
+        self.key_quads[0].len() == 0 && self.key_quads[1].len() == 0 && 
+        self.key_quads[2].len() == 0 && self.key_quads[3].len() == 0
+    }
+
+    // implements the floodfill alg in the background.
+    pub fn find_accessible_keys(&self, map: &CharMatrix) -> Vec<(char, usize)> {
+        let mut key_vec: Vec<(char, usize)> = Vec::new();
+        for i in 0..4 {
+            let walkable_spaces = util::get_walkable_spaces(&map, &self.door_quads[i], self.player_positions[i]);
+        
+            // check from key positions
+            for (ch, p) in &self.key_quads[i] {
+                if walkable_spaces.get(*p).unwrap() == true {
+                    key_vec.push( (*ch, i) );
+                }
+            }
+        }
+
+        key_vec
+    }
+
+    // returns a copy of the current node, but with a map that has an updated 
+    // player location & with the key & door cooresponnding to c removed.
+    pub fn got_key(&self, astar_calls: &mut AstarCache, map: &CharMatrix, key_ch: char, index: usize) -> QuadNode {
+        let mut player_positions = [
+            self.player_positions[0], self.player_positions[1], 
+            self.player_positions[2], self.player_positions[3]
+        ];
+        
+        // make copies of keys and doors.
+        let mut key_quads = [Vec::new(), Vec::new(), Vec::new(), Vec::new()];
+        let mut door_quads = [Vec::new(), Vec::new(), Vec::new(), Vec::new()];
+        for i in 0..4 {
+            for (ch, p) in &self.key_quads[i] {
+                if *ch != key_ch {
+                    key_quads[i].push( (*ch, *p) );
+                } else {
+                    player_positions[index] = *p;  // only update the selected robot
+                }
+            }
+            for (ch, p) in &self.door_quads[i] {
+                if *ch != key_ch.to_ascii_uppercase() {
+                    door_quads[i].push( (*ch, *p) );
+                }
+            }
+        }
+        
+        // Do A* from self.player_pos -> player_pos (using newly updated information)
+        let (old_p, new_p) = (self.player_positions[index], player_positions[index]);
+        // Also memoise same calls.
+        let move_len = match astar_calls.get( &(door_quads[index].clone(), old_p, new_p) ) {
+            Some(val) => *val,
+            None => {
+                let val = util::astar_pathfind(&map, &door_quads[index], old_p, new_p).len();
+                let key = (door_quads[index].clone(), old_p, new_p);
+                astar_calls.insert(key, val);
+                val
+            },
+        };
+
+        QuadNode {
+            key_quads,
+            door_quads,
+            player_positions,
+            path_len: self.path_len + move_len,
+        }
+    }
+
+    // This function computes a hash which disregards the length of the path to the node.
+    // Now, nodes which are hash identical, but have a longer or equal path length can safely be pruned because
+    // the shorter nodes are ultimately better. (or exactly the same if equal)
+    pub fn state_hash(&self) -> u64 {
+        let mut s = DefaultHasher::new();
+        self.key_quads.hash(&mut s);
+        self.player_positions.hash(&mut s);
+        s.finish()
+    }
+}
+impl Hash for QuadNode {
+    fn hash<H: Hasher>(&self, state: &mut H) {
+        self.key_quads.hash(state);
+        self.player_positions.hash(state);
+        self.path_len.hash(state);
+    }
+}
+impl PartialEq for QuadNode {
+    fn eq(&self, other: &Self) -> bool {
+        self.key_quads == other.key_quads && 
+        self.player_positions == other.player_positions && 
+        self.path_len == other.path_len
+    }
+}
+impl Eq for QuadNode {}
+
 #[derive(Clone, Eq, PartialEq, Hash)]
 pub struct CharMatrix {
     pub width: usize,

@@ -43,6 +43,18 @@ pub fn find_walkable_spaces(map: &CharMatrix, doors: &Vec<(char, Point2D)>, curr
 
 // ************************************************************************** //
 
+pub fn quad_closest_astar_greedy(astar_calls: &mut AstarCache, map: &CharMatrix,  
+                                 mut quad_points: Vec<Vec<Point2D>>, player_positions: [Point2D; 4]) -> usize {
+    let mut f_cost = 0;
+    for i in 0..4 {
+        quad_points[i].push(player_positions[i]);
+        //f_cost += closest_distance(&quad_points[i]); 
+        //f_cost += closest_astar(astar_calls, map, new_node.doors, quad_points[i]);
+        f_cost += closest_astar_greedy(astar_calls, map, &quad_points[i]);
+    }
+    f_cost
+}
+
 pub fn manhattan_distance(p1: Point2D, p2: Point2D) -> usize {
     let mut val: usize = 0;
     if p1.x < p2.x {
