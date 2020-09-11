@@ -30,3 +30,25 @@ DeployReport DroneControlSystem::SendDroneToCoord(int x, int y) {
             return NoReport;
     }
 }
+
+char DroneControlSystem::SendDroneToCoordRaw(int x, int y) {
+    if (_isLoaded == false) {
+        cout << "ERROR: program must first be loaded" << endl;
+        exit(1);
+    }
+
+    _ic.ResetProgram();
+    _ic.EnqueInput(x);
+    _ic.EnqueInput(y);
+    _ic.RunProgram();
+
+    int out = (int) _ic.DequeueOutput();
+    switch (out) {
+        case 0:
+            return '.';
+        case 1:
+            return '#';
+        default:
+            return 'E';
+    }
+}

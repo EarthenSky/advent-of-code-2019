@@ -26,6 +26,7 @@ public:
 
     void LoadControlProgram(string filename);
     DeployReport SendDroneToCoord(int x, int y);
+    char SendDroneToCoordRaw(int x, int y);
 };
 
 #endif //!DRONE_CONTROL_SYSTEM
