@@ -30,4 +30,31 @@ EDIT 3: Perhaps my c++ skill is improving. At the least, it's no longer broken c
 
 ## TODO (languages):
 - might have to save some of these until aoc2020
-- maybe nim, kotlin, (a) lisp
+- maybe nim, kotlin, clojure, elixir, mun, go, ada(?), julia(?)
+- Alphabet of programming languages:
+- a - ada / Abrainfuck / asm / alice
+- b - basic / boo 
+- c - clojure / c / c++ / c# / crystal
+- d - delphi / D / dart 
+- e - elixir / erlang 
+- f - forth / fortran / f#
+- g - groovy / go
+- h - haskell / hack
+- i - io / icon
+- j - julia / java / js
+- k - kotlin
+- l - lisp / lua / limbo
+- m - mun / mercury
+- n - nim
+- o - objective-c / oz / octave
+- p - perl / python / php / 
+- q - Q
+- r - rust / R / ruby
+- s - scheme / swift / scala / 
+- t - Tcl / tex(?)
+- u - unicon
+- v - vala / visual basic
+- w - wyvern / whiley
+- x - X10 / XL / Xtend / X#
+- y - Yorick / Yoix
+- z - Zig / Z++

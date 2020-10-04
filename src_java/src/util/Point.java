@@ -44,25 +44,8 @@ public class Point {
     @Override
     public int hashCode() {
         return Objects.hash(x, y);
-        /*
-        int hash = 17;
-        hash = hash * 31 + x;
-        hash = hash * 31 + y;
-        return hash;*/
     }
     
-    /*
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        else if (obj == null || getClass() != obj.getClass())
-            return false;
-        Point other = (Point) obj;
-        return !(this.x != other.x || this.y != other.y);
-    }
-    */
-
     @Override
     public boolean equals(Object obj) {
         return obj != null && ((Point) obj).x == this.x && ((Point) obj).y == this.y;
