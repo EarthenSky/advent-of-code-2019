@@ -70,6 +70,7 @@ public class TagFinder {
 
     public HashMap<String, Point> generateMap() {
         // TODO: portalIdMap should be it's own class so I don't have to deal with this hacky syntax below.
+        // Buuuut since it already works & I don't have to edit it, maybe I just don't touch it.
         HashMap<String, PointPairPair> portalIdMap = new HashMap<String, PointPairPair>(); // map with default value of Infinity
     
         // function to do check & add on the above variables.

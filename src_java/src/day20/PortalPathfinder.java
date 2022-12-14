@@ -25,7 +25,7 @@ public class PortalPathfinder {
         this.start = tf.findOuterTagPos('A', 'A');
         this.goal = tf.findOuterTagPos('Z', 'Z');
         this.portalIdMap = tf.generateMap();
-        System.out.println(portalIdMap.toString());
+        //System.out.println(portalIdMap.toString());
     }
 
     public int getPathLen() {
@@ -43,7 +43,7 @@ public class PortalPathfinder {
         }
     }
 
-    // not the best with portals.
+    // not the best with portals. (so didn't use it!)
     private int manhattanDistance(Point p1, Point p2) {
         int val = 0;
         if (p1.x < p2.x) {
@@ -100,9 +100,7 @@ public class PortalPathfinder {
         openQueue.add(start);
 
         while ( !openQueue.isEmpty() ) {
-            //System.out.println(openQueue.toString());
             Point current = openQueue.remove();
-            //System.out.println(current.toString());
             if(current.equals(goal)) {
                 return reconstructPath(cameFrom, goal);
             }
